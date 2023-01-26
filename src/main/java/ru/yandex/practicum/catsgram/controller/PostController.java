@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class PostController {
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
-    private List<Post> posts = new ArrayList<>();
+    private final List<Post> posts = new ArrayList<>();
 
     @GetMapping("/posts")
     public List<Post> findAll() {
