@@ -18,17 +18,22 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> findAll() {
-        return userService.findAll();
+    public Collection<User> findAllUsers() {
+        return userService.findAllUsers();
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
     @PutMapping
-    public User put(@RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
+    }
+
+    @GetMapping("/user/{userMail}")
+    public User findUserByEmail(@PathVariable("userMail") String userMail) {
+        return userService.findUserByEmail(userMail);
     }
 }

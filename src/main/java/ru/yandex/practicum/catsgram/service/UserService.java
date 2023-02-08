@@ -17,7 +17,7 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final Map<String, User> users = new HashMap<>();
 
-    public Collection<User> findAll() {
+    public Collection<User> findAllUsers() {
         log.debug("Текущее количество пользователей: {}", users.size());
         return users.values();
     }
@@ -40,7 +40,6 @@ public class UserService {
             throw new InvalidEmailException("Адрес электронной почты не может быть пустым.");
         }
         users.put(user.getEmail(), user);
-
         return user;
     }
 
