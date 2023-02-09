@@ -55,4 +55,14 @@ public class PostService {
                 .findFirst()
                 .orElseThrow(() -> new PostNotFoundException(String.format("Пост № %d не найден", postId)));
     }
+
+    public List<Post> findAllByUserEmail(String email, Integer size, String sort) {
+        return posts.stream().filter(p -> email.equals(p.getAuthor())).sorted((p0, p1) -> {
+            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+            if(sort.equals("desc")){
+                comp = -1 * comp; //обратный порядок сортировки
+            }
+            return comp;
+        }).limit(size).collect(Collectors.toList());
+    }
 }
