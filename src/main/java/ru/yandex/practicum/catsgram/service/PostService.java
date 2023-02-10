@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.yandex.practicum.catsgram.Constants.DESCENDING_ORDER;
+
 @Service
 public class PostService {
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
@@ -31,13 +33,11 @@ public class PostService {
 
     public List<Post> findAllPosts(Integer size, Integer from, String sort) {
         log.debug("Текущее количество постов: {}", posts.size());
-        return posts.stream().sorted((p0, p1) -> {
-            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
-            if (sort.equals("desc")) {
-                comp = -1 * comp; //обратный порядок сортировки
-            }
-            return comp;
-        }).skip(from).limit(size).collect(Collectors.toList());
+        return posts.stream()
+                .sorted((p0, p1) -> compare(p0, p1, sort))
+                .skip(from)
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     public Post createPost(Post post) {
@@ -57,12 +57,18 @@ public class PostService {
     }
 
     public List<Post> findAllByUserEmail(String email, Integer size, String sort) {
-        return posts.stream().filter(p -> email.equals(p.getAuthor())).sorted((p0, p1) -> {
-            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
-            if(sort.equals("desc")){
-                comp = -1 * comp; //обратный порядок сортировки
-            }
-            return comp;
-        }).limit(size).collect(Collectors.toList());
+        return posts.stream()
+                .filter(p -> email.equals(p.getAuthor()))
+                .sorted((p0, p1) -> compare(p0, p1, sort))
+                .limit(size)
+                .collect(Collectors.toList());
+    }
+
+    private int compare(Post p0, Post p1, String sort) {
+        int result = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+        if (sort.equals(DESCENDING_ORDER)) {
+            result = -1 * result; //обратный порядок сортировки
+        }
+        return result;
     }
 }
