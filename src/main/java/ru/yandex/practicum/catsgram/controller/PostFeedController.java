@@ -17,6 +17,7 @@ import static ru.yandex.practicum.catsgram.Constants.SORTS;
 @RestController()
 @RequestMapping("/feed/friends")
 public class PostFeedController {
+
     private final PostService postService;
 
     public PostFeedController(PostService postService) {
@@ -24,7 +25,7 @@ public class PostFeedController {
     }
 
     @PostMapping
-    public List<Post> getFriendsFeed(@RequestBody FeedParams feedParams) {
+    List<Post> getFriendsFeed(@RequestBody FeedParams feedParams) {
         if (!SORTS.contains(feedParams.getSort())) {
             throw new IncorrectParameterException("sort");
         }
@@ -37,7 +38,7 @@ public class PostFeedController {
 
         List<Post> result = new ArrayList<>();
         for (String friendEmail : feedParams.getFriendsEmails()) {
-            result.addAll(postService.findAllByUserEmail(friendEmail, feedParams.getSize(), feedParams.getSort()));
+            result.addAll(postService.findPostsByUser(friendEmail, feedParams.getSize(), feedParams.getSort()));
         }
         return result;
     }

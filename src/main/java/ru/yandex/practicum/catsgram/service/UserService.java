@@ -1,56 +1,20 @@
 package ru.yandex.practicum.catsgram.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.catsgram.controller.UserController;
-import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
-import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
+import ru.yandex.practicum.catsgram.dao.UserDao;
 import ru.yandex.practicum.catsgram.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    private final Map<String, User> users = new HashMap<>();
+    private final UserDao userDao;
 
-    public Collection<User> findAllUsers() {
-        log.debug("Текущее количество пользователей: {}", users.size());
-        return users.values();
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
     }
 
-    public User createUser(User user) {
-        checkEmail(user);
-        if (users.containsKey(user.getEmail())) {
-            throw new UserAlreadyExistException(String.format(
-                    "Пользователь с электронной почтой %s уже зарегистрирован.",
-                    user.getEmail()
-            ));
-        }
-        log.debug("Создается пользователь с email: {}", user.getEmail());
-        users.put(user.getEmail(), user);
-        return user;
-    }
-
-    public User updateUser(User user) {
-        checkEmail(user);
-        users.put(user.getEmail(), user);
-        return user;
-    }
-
-    public User findUserByEmail(String email) {
-        if (email == null) {
-            return null;
-        }
-        return users.get(email);
-    }
-
-    private void checkEmail(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new InvalidEmailException("Адрес электронной почты не может быть пустым.");
-        }
+    public Optional<User> findUserById(String id) {
+        return userDao.findUserById(id);
     }
 }
