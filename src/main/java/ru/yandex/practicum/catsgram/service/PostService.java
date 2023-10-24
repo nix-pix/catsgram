@@ -21,7 +21,7 @@ public class PostService {
 
     public Collection<Post> findPostsByUser(String userId) {
         User user = userService.findUserById(userId)
-                .orElseThrow(() ->new UserNotFoundException("Пользователь с идентификатором " + userId + " не найден."));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с идентификатором " + userId + " не найден."));
 
         return postDao.findPostsByUser(user);
     }
